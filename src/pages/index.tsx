@@ -1,4 +1,7 @@
-import { Center, Text } from "@chakra-ui/react";
+import Aside from "@/components/Aside";
+import Header from "@/components/Header";
+import Main from "@/components/Main";
+import { Box, Flex } from "@chakra-ui/react";
 import Head from "next/head";
 
 export default function Home() {
@@ -13,9 +16,18 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Center>
-        <Text fontSize="3xl"> Next.js - Chakra UI Template</Text>
-      </Center>
+      <Box h="100vh">
+        <Header />
+
+        <Flex
+          w="full"
+          direction={{ sm: "column-reverse", md: "row" }}
+          pt="20px"
+        >
+          <Main />
+          <Aside />
+        </Flex>
+      </Box>
     </>
   );
 }
