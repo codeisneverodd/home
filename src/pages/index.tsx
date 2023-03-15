@@ -1,4 +1,4 @@
-import MainLayout from "@/lib/@common/layouts/MainLayout";
+import MainLayout from "@/lib/components/MainLayout";
 import { Center, Text } from "@chakra-ui/react";
 
 export default function Home() {
