@@ -1,4 +1,4 @@
-import useColor from "@/hooks/useColor";
+import useColor from "@/lib/hooks/useColor";
 import {
   Box,
   Button,
@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import {
   faClock,
+  faCode,
   faHome,
   faMoon,
   faSun
@@ -18,7 +19,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { ComponentProps, useRef } from "react";
-import Logo from "../components/Logo";
+import Logo from "./Logo";
 
 export default function MainLayout({
   title,
@@ -83,6 +84,7 @@ function Menu() {
     { icon: typeof faClock; title: string; href: string }[]
   >([
     { icon: faHome, title: "Home", href: "/" },
+    { icon: faCode, title: "Solution Pass", href: "/solution-pass" },
     { icon: faClock, title: "Timer", href: "/timer" }
   ]);
 
