@@ -1,5 +1,5 @@
-import { Prob } from "@/types/solutions";
 import { useColorModeValue } from "@chakra-ui/react";
+import { Prob } from "../solution-pass/hooks/useRepo";
 
 export default function useColor() {
   const bodyBg = useColorModeValue("white", "gray.800");
