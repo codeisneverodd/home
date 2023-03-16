@@ -34,8 +34,15 @@ const getRepo = (() => {
   };
 })();
 
+export const repoQueryOptions = {
+  all: {
+    queryKey: ["repo"],
+    queryFn: getRepo
+  }
+};
+
 export default function useRepo() {
-  const repoQuery = useQuery({ queryKey: ["repo"], queryFn: getRepo });
+  const repoQuery = useQuery(repoQueryOptions.all);
 
   return { repoQuery };
 }

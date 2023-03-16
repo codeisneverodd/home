@@ -1,4 +1,5 @@
 import useColor from "@/lib/hooks/useColor";
+import { CustomAppProps } from "@/pages/_app";
 import {
   Accordion,
   AccordionButton,
@@ -13,13 +14,15 @@ import {
   Flex,
   Icon,
   IconButton,
+  Spinner,
   Text,
   useToast
 } from "@chakra-ui/react";
 import { faCopy } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { dehydrate, QueryClient } from "@tanstack/react-query";
 import Link from "next/link";
-import useRepo, { Prob, Sol } from "../hooks/useRepo";
+import useRepo, { Prob, repoQueryOptions, Sol } from "../hooks/useRepo";
 import useSearch from "../hooks/useSearch";
 
 export default function ResultSection() {
@@ -64,7 +67,24 @@ function TableContent() {
   const { repoQuery } = useRepo();
   const { result } = useSearch();
 
-  if (!repoQuery.data) return null;
+  if (repoQuery.isLoading) {
+    return (
+      <Flex
+        h="200px"
+        px="20px"
+        direction="column"
+        align="center"
+        justify="center"
+        gap="40px"
+      >
+        <Text>해설을 불러오는 중이에요</Text>
+
+        <Spinner thickness="2px" speed="1s" size="md" />
+      </Flex>
+    );
+  }
+  if (repoQuery.isError) return null;
+
   if (result.keyword !== "" && result.probs.length === 0)
     return (
       <Center h="60px" px="20px">
@@ -90,7 +110,7 @@ function TableRow({ probData: { title, level, id } }: { probData: Prob }) {
   const solutions = repoQuery.data?.sols.filter(s => s.probId === id);
 
   return (
-    <AccordionItem w="full">
+    <AccordionItem w="full" content-visibility="auto">
       <AccordionButton
         as={Box}
         borderTop="0.5px solid gray"
@@ -129,6 +149,7 @@ function TableRow({ probData: { title, level, id } }: { probData: Prob }) {
 
 function Solutions({ solData: { author, code } }: { solData: Sol }) {
   const toast = useToast();
+
   return (
     <Flex direction="column" gap="20px">
       <Link href={`https://github.com/${author}`} target="_blank">
@@ -158,8 +179,8 @@ function Solutions({ solData: { author, code } }: { solData: Sol }) {
             });
           }}
           pos="absolute"
-          top="0"
-          right="0"
+          top="4px"
+          right="4px"
         />
         <Code
           w="full"
@@ -168,10 +189,26 @@ function Solutions({ solData: { author, code } }: { solData: Sol }) {
           py="20px"
           px="12px"
           overflow="scroll"
+          _light={{
+            bg: "white"
+          }}
         >
           {code}
         </Code>
       </Box>
     </Flex>
   );
+}
+
+export async function getServerSideProps() {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(repoQueryOptions.all);
+
+  const props: CustomAppProps["pageProps"] = {
+    dehydratedState: dehydrate(queryClient)
+  };
+
+  return {
+    props
+  };
 }
