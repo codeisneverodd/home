@@ -92,6 +92,7 @@ function Menu() {
     <Flex flex="1" justify="end">
       {menuItems.current.map(({ icon, title, href }) => (
         <Button
+          key={title}
           leftIcon={<Icon as={FontAwesomeIcon} icon={icon} />}
           px="12px"
           py="8px"

@@ -22,6 +22,8 @@ import { faCopy } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
 import Link from "next/link";
+import { useState } from "react";
+import { InView } from "react-intersection-observer";
 import useRepo, { Prob, repoQueryOptions, Sol } from "../hooks/useRepo";
 import useSearch from "../hooks/useSearch";
 
@@ -66,6 +68,7 @@ function TableHeader() {
 function TableContent() {
   const { repoQuery } = useRepo();
   const { result } = useSearch();
+  const [itemsInViewLength, setItemsInViewLength] = useState(30);
 
   if (repoQuery.isLoading) {
     return (
@@ -85,22 +88,43 @@ function TableContent() {
   }
   if (repoQuery.isError) return null;
 
-  if (result.keyword !== "" && result.probs.length === 0)
+  if (result.keyword !== "" && result.probs.length === 0) {
     return (
       <Center h="60px" px="20px">
         <Text>일치하는 문제가 없어요</Text>
       </Center>
     );
+  }
+
+  const items = (result.keyword === "" ? repoQuery.data.probs : result.probs)
+    .slice()
+    .sort((a, b) => a.level - b.level);
 
   return (
-    <Accordion allowMultiple>
-      {(result.keyword === "" ? repoQuery.data.probs : result.probs)
-        .slice()
-        .sort((a, b) => a.level - b.level)
-        .map(prob => (
+    <>
+      <Accordion allowMultiple>
+        {items.slice(0, itemsInViewLength).map(prob => (
           <TableRow key={prob.id} probData={prob} />
         ))}
-    </Accordion>
+      </Accordion>
+      <InView
+        as="div"
+        width="100%"
+        threshold={0.9}
+        style={{
+          display: itemsInViewLength < items.length ? "block" : "none"
+        }}
+        onChange={inView => {
+          if (itemsInViewLength > items.length)
+            setItemsInViewLength(items.length);
+          if (inView) setItemsInViewLength(prev => prev + 30);
+        }}
+      >
+        <Center h="60px" w="full" mt="20px">
+          <Spinner />
+        </Center>
+      </InView>
+    </>
   );
 }
 
