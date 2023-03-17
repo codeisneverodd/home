@@ -1,6 +1,6 @@
 import { QueryStatus } from "@tanstack/react-query";
 import { chosungIncludes, hangulIncludes } from "@toss/hangul";
-import { atom, useRecoilState } from "recoil";
+import { atom, useRecoilState, useResetRecoilState } from "recoil";
 import useRepo, { Prob } from "./useRepo";
 
 const searchAtom = atom<{
@@ -18,7 +18,7 @@ const searchAtom = atom<{
 
 export default function useSearch() {
   const [result, setResult] = useRecoilState(searchAtom);
-
+  const reset = useResetRecoilState(searchAtom);
   const { repoQuery } = useRepo();
 
   const search = (keyword: string) => {
@@ -43,5 +43,5 @@ export default function useSearch() {
     }
   };
 
-  return { result, search };
+  return { result, search, reset };
 }
