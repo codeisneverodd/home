@@ -6,7 +6,7 @@ import {
 import { useToast } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { Lang } from "./useSearch";
+import { Lang } from "./useRepo";
 
 export default function useIssue() {
   const toast = useToast();

@@ -40,5 +40,7 @@ export type Sol = {
   code: string;
   probId: string;
   createdAt: ReturnType<typeof Date.now>;
-  lang: "js";
+  lang: Lang;
 };
+
+export type Lang = "JavaScript" | "Python";

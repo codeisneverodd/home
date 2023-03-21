@@ -2,7 +2,7 @@ import { localStorageEffect } from "@/lib/@utils/storageEffect";
 import { QueryStatus } from "@tanstack/react-query";
 import { chosungIncludes, hangulIncludes } from "@toss/hangul";
 import { atom, useRecoilState, useResetRecoilState } from "recoil";
-import useRepo, { Prob } from "./useRepo";
+import useRepo, { Lang, Prob } from "./useRepo";
 
 const searchAtom = atom<{
   status: QueryStatus;
@@ -120,4 +120,3 @@ export default function useSearch() {
 }
 
 export const POSSIBLE_LANGS = ["JavaScript", "Python"] as const;
-export type Lang = "JavaScript" | "Python";

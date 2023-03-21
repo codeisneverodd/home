@@ -25,7 +25,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { ComponentProps, useState } from "react";
 import useIssue from "../hooks/useIssue";
-import useSearch, { Lang, POSSIBLE_LANGS } from "../hooks/useSearch";
+import { Lang } from "../hooks/useRepo";
+import useSearch, { POSSIBLE_LANGS } from "../hooks/useSearch";
 
 const CodeEditor = dynamic(
   () => import("@uiw/react-textarea-code-editor").then(mod => mod.default),
