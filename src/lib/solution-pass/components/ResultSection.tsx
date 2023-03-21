@@ -57,8 +57,9 @@ function TableHeader() {
       fontWeight="bold"
       gap="20px"
     >
-      <Text w="60px">난이도</Text>
-      <Text flex="1">제목</Text>
+      <Text flex="1" textAlign="left">
+        제목
+      </Text>
       <Text w="60px">정답 수</Text>
       <Text w="40px">정답</Text>
     </Flex>
@@ -96,9 +97,9 @@ function TableContent() {
     );
   }
 
-  const items = (result.keyword === "" ? repoQuery.data.probs : result.probs)
-    .slice()
-    .sort((a, b) => a.level - b.level);
+  const items = (
+    result.keyword === "" ? repoQuery.data.probs : result.probs
+  ).slice();
 
   return (
     <>
@@ -128,10 +129,10 @@ function TableContent() {
   );
 }
 
-function TableRow({ probData: { title, level, id } }: { probData: Prob }) {
-  const { levelColors } = useColor();
+function TableRow({ probData: { title, id } }: { probData: Prob }) {
   const { repoQuery } = useRepo();
   const solutions = repoQuery.data?.sols.filter(s => s.probId === id);
+  const { getCountColor } = useColor();
 
   return (
     <AccordionItem w="full" content-visibility="auto">
@@ -143,18 +144,13 @@ function TableRow({ probData: { title, level, id } }: { probData: Prob }) {
         h="60px"
       >
         <Flex alignItems="center" gap="20px" w="full">
-          <Text
-            textAlign="center"
-            w="60px"
-            fontSize="lg"
-            color={levelColors[level]}
-            fontWeight="bold"
-          >
-            {level}
-          </Text>
-
           <Text flex="1">{title}</Text>
-          <Text w="60px" textAlign="center">
+          <Text
+            w="60px"
+            textAlign="center"
+            fontWeight="bold"
+            color={getCountColor(solutions?.length ?? 0)}
+          >
             {solutions?.length}
           </Text>
           <AccordionIcon w="40px" />

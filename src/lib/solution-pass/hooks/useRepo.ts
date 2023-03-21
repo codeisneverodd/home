@@ -5,9 +5,7 @@ import { z } from "zod";
 const getRepo = (() => {
   const isRepo = (repo: any): repo is Repo => {
     const scheme = z.object({
-      probs: z.array(
-        z.object({ id: z.string(), level: z.number(), title: z.string() })
-      ),
+      probs: z.array(z.object({ id: z.string(), title: z.string() })),
       sols: z.array(
         z.object({
           id: z.string(),
@@ -50,7 +48,6 @@ export default function useRepo() {
 export type Prob = {
   id: string;
   title: string;
-  level: 0 | 1 | 2 | 3 | 4 | 5;
 };
 
 export type Sol = {

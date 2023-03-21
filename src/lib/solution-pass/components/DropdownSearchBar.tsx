@@ -72,13 +72,14 @@ function Result({ onClose }: { onClose: () => void }) {
 }
 
 function ResultRow({
-  probData: { id, level, title },
+  probData: { id, title },
   ...props
 }: { probData: Prob } & ComponentProps<typeof Flex>) {
-  const { levelColors, subtleBg, accentBg } = useColor();
+  const { subtleBg, accentBg } = useColor();
 
   return (
     <Flex
+      pl="20px"
       key={id}
       alignItems="center"
       gap="20px"
@@ -90,15 +91,6 @@ function ResultRow({
       cursor="pointer"
       {...props}
     >
-      <Text
-        textAlign="center"
-        w="60px"
-        fontSize="lg"
-        color={levelColors[level]}
-        fontWeight="bold"
-      >
-        {level}
-      </Text>
       <Text flex="1">{title}</Text>
     </Flex>
   );

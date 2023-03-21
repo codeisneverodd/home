@@ -85,14 +85,15 @@ function SelectedProb(props: ComponentProps<typeof Flex>) {
     result: { selectedProb },
     reset
   } = useSearch();
-  const { subtleBg, levelColors } = useColor();
+  const { subtleBg } = useColor();
 
   if (!selectedProb) return null;
 
-  const { id, level, title } = selectedProb;
+  const { id, title } = selectedProb;
 
   return (
     <Flex
+      pl="20px"
       key={id}
       alignItems="center"
       gap="20px"
@@ -103,15 +104,6 @@ function SelectedProb(props: ComponentProps<typeof Flex>) {
       pr="20px"
       {...props}
     >
-      <Text
-        textAlign="center"
-        w="60px"
-        fontSize="lg"
-        color={levelColors[level]}
-        fontWeight="bold"
-      >
-        {level}
-      </Text>
       <Text flex="1">{title}</Text>
 
       <Link
@@ -152,7 +144,7 @@ function SubmitToolBar() {
 
     createIssueMutation.mutate(
       {
-        title: `Level ${selectedProb?.level} | ${selectedProb?.title} 정답 | | ${session.user?.name}`,
+        title: `${selectedProb?.title} 정답 | | ${session.user?.name}`,
         code,
         assignees: [session.user?.name ?? "", "codeisneverodd"]
       },
