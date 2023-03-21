@@ -1,4 +1,5 @@
 import { useColorModeValue } from "@chakra-ui/react";
+import { Lang } from "../solution-pass/hooks/useSearch";
 
 export default function useColor() {
   const bodyBg = useColorModeValue("white", "gray.800");
@@ -13,5 +14,11 @@ export default function useColor() {
     return "#2189ff";
   };
 
-  return { bodyBg, subtleBg, alphaBg, accentBg, getCountColor };
+  const getLangColor = (lang: Lang) => {
+    if (lang === "JavaScript") return "#f7df1e";
+    if (lang === "Python") return "#4584B6";
+    return accentBg;
+  };
+
+  return { bodyBg, subtleBg, alphaBg, accentBg, getCountColor, getLangColor };
 }

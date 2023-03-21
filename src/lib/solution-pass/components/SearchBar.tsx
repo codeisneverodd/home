@@ -1,13 +1,9 @@
 import {
-  Icon,
   Input,
   InputGroup,
-  InputLeftElement,
   InputRightElement,
   Spinner
 } from "@chakra-ui/react";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ComponentProps, useState } from "react";
 import useSearch from "../hooks/useSearch";
 
@@ -40,9 +36,7 @@ export default function SearhBar(props: ComponentProps<typeof Input>) {
         placeholder="문제를 검색해주세요"
         {...props}
       />
-      <InputLeftElement>
-        <Icon as={FontAwesomeIcon} icon={faSearch} />
-      </InputLeftElement>
+
       <InputRightElement>
         <Spinner
           display={isTyping ? "block" : "none"}

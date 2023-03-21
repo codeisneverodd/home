@@ -6,6 +6,7 @@ import {
 import { useToast } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { Lang } from "./useSearch";
 
 export default function useIssue() {
   const toast = useToast();
@@ -19,18 +20,24 @@ export default function useIssue() {
 
   const createIssueMutation = useMutation({
     mutationFn: async ({
+      probId,
       title,
       code,
-      assignees
+      author,
+      assignees,
+      lang
     }: {
+      probId: string;
       title: string;
       code: string;
+      author: string;
       assignees: string[];
+      lang: Lang;
     }) => {
       const reqBody: CreateRepoIssueReqBody = {
         title,
         assignees,
-        body: codeToMarkdown(code)
+        body: codeToMarkdown({ code, probId, author, lang })
       };
       const response = await axios.post<CreateRepoIssuesResponse>(
         "/api/issue",
@@ -58,8 +65,30 @@ export default function useIssue() {
   return { issueQuery, createIssueMutation };
 }
 
-function codeToMarkdown(code: string) {
-  return `\`\`\`js
+function codeToMarkdown({
+  code,
+  probId,
+  author,
+  lang
+}: {
+  code: string;
+  probId: string;
+  author: string;
+  lang: Lang;
+}) {
+  return `
+## 제출한 정답 
+\`\`\`js
 ${code}
-\`\`\``;
+\`\`\`
+## 풀이 데이터
+\`\`\`json
+{
+  "probId": "${probId}",
+  "author": "${author}",
+  "lang": "${lang}",
+  "createdAt": ${Date.now()}
+}
+\`\`\`
+`;
 }

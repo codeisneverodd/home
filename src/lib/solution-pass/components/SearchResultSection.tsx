@@ -27,7 +27,7 @@ import { InView } from "react-intersection-observer";
 import useRepo, { Prob, repoQueryOptions, Sol } from "../hooks/useRepo";
 import useSearch from "../hooks/useSearch";
 
-export default function ResultSection() {
+export default function SearchResultSection() {
   const { subtleBg } = useColor();
 
   return (
@@ -67,11 +67,11 @@ function TableHeader() {
 }
 
 function TableContent() {
-  const { repoQuery } = useRepo();
+  const { probsQuery } = useRepo();
   const { result } = useSearch();
   const [itemsInViewLength, setItemsInViewLength] = useState(30);
 
-  if (repoQuery.isLoading) {
+  if (probsQuery.isLoading) {
     return (
       <Flex
         h="200px"
@@ -87,19 +87,26 @@ function TableContent() {
       </Flex>
     );
   }
-  if (repoQuery.isError) return null;
+  if (probsQuery.isError) return null;
 
   if (result.keyword !== "" && result.probs.length === 0) {
     return (
-      <Center h="60px" px="20px">
+      <Center h="60px" px="20px" pb="20px">
         <Text>일치하는 문제가 없어요</Text>
       </Center>
     );
   }
 
-  const items = (
-    result.keyword === "" ? repoQuery.data.probs : result.probs
-  ).slice();
+  if (result.selectedLangs?.length === 0) {
+    return (
+      <Center h="60px" px="20px" pb="20px">
+        <Text>언어를 선택해주세요</Text>
+      </Center>
+    );
+  }
+  const items = (result.keyword === "" ? probsQuery.data : result.probs)
+    .slice()
+    .sort((a, b) => b.solvedCount - a.solvedCount);
 
   return (
     <>
@@ -130,8 +137,12 @@ function TableContent() {
 }
 
 function TableRow({ probData: { title, id } }: { probData: Prob }) {
-  const { repoQuery } = useRepo();
-  const solutions = repoQuery.data?.sols.filter(s => s.probId === id);
+  const { solsQuery } = useRepo();
+  const { result } = useSearch();
+  const solutions = solsQuery.data?.filter(
+    s => s.probId === id && result.selectedLangs?.includes(s.lang)
+  );
+
   const { getCountColor } = useColor();
 
   return (
@@ -167,24 +178,32 @@ function TableRow({ probData: { title, id } }: { probData: Prob }) {
   );
 }
 
-function Solutions({ solData: { author, code } }: { solData: Sol }) {
+function Solutions({ solData: { author, code, lang } }: { solData: Sol }) {
   const toast = useToast();
-
+  const { getLangColor } = useColor();
   return (
     <Flex direction="column" gap="20px">
-      <Link href={`https://github.com/${author}`} target="_blank">
-        <Button
-          h="64px"
-          w="full"
-          textAlign="left"
-          justifyContent="left"
-          gap="20px"
-          variant="ghost"
-        >
-          <Avatar src={`https://github.com/${author}.png`} />
-          <Text fontWeight="bold"> {author}</Text>
-        </Button>
-      </Link>
+      <Flex align="center" justify="space-between">
+        <Link href={`https://github.com/${author}`} target="_blank">
+          <Button
+            h="64px"
+            w="full"
+            textAlign="left"
+            justifyContent="left"
+            gap="20px"
+            variant="ghost"
+          >
+            <Avatar src={`https://github.com/${author}.png`} />
+            <Text fontWeight="bold"> {author}</Text>
+          </Button>
+        </Link>
+        <Center bg={getLangColor(lang)} px="12px" h="30px" rounded="4px">
+          <Text fontWeight="extrabold" color="black">
+            {lang}
+          </Text>
+        </Center>
+      </Flex>
+
       <Box as="pre" w="full" overflow="hidden" pos="relative">
         <IconButton
           icon={<Icon as={FontAwesomeIcon} icon={faCopy} />}
@@ -221,7 +240,8 @@ function Solutions({ solData: { author, code } }: { solData: Sol }) {
 
 export async function getServerSideProps() {
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(repoQueryOptions.all);
+  await queryClient.prefetchQuery(repoQueryOptions.probs);
+  await queryClient.prefetchQuery(repoQueryOptions.sols);
 
   const props: CustomAppProps["pageProps"] = {
     dehydratedState: dehydrate(queryClient)

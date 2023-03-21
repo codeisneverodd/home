@@ -19,7 +19,7 @@ export default function DropdownSearhBar() {
 }
 
 function Result({ onClose }: { onClose: () => void }) {
-  const { result, select } = useSearch();
+  const { result, selectProb: select } = useSearch();
   const { subtleBg } = useColor();
 
   const ref = useRef(null);

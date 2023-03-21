@@ -6,6 +6,9 @@ import {
   Flex,
   Icon,
   IconButton,
+  Radio,
+  RadioGroup,
+  Stack,
   Text,
   Tooltip,
   useColorMode
@@ -20,9 +23,9 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ComponentProps } from "react";
+import { ComponentProps, useState } from "react";
 import useIssue from "../hooks/useIssue";
-import useSearch from "../hooks/useSearch";
+import useSearch, { Lang, POSSIBLE_LANGS } from "../hooks/useSearch";
 
 const CodeEditor = dynamic(
   () => import("@uiw/react-textarea-code-editor").then(mod => mod.default),
@@ -31,11 +34,38 @@ const CodeEditor = dynamic(
 
 export default function SolutionSubmitForm() {
   const { colorMode } = useColorMode();
-
+  const [lang, setLang] = useState<Lang>("JavaScript");
   const {
     result: { selectedProb, code },
     setCode
   } = useSearch();
+  const { createIssueMutation } = useIssue();
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  const handelSubmit = () => {
+    if (session?.user?.name === undefined) return;
+
+    createIssueMutation.mutate(
+      {
+        title: `${selectedProb?.title} 정답 | ${session.user?.name}`,
+        code,
+        probId: selectedProb?.id ?? "",
+        author: session.user?.name ?? "",
+        assignees: [session.user?.name ?? "", "codeisneverodd"],
+        lang
+      },
+      {
+        onSuccess: data => {
+          router.push(`/solution-pass/new/submitted/${data.number}`);
+        }
+      }
+    );
+  };
+
+  const handleSignOut = () => {
+    signOut();
+  };
 
   if (!selectedProb) {
     return (
@@ -50,6 +80,20 @@ export default function SolutionSubmitForm() {
         선택한 문제
       </Text>
       <SelectedProb />
+      <Flex direction="column" w="full" gap="12px">
+        <Text w="full" fontSize="2xl">
+          풀이한 언어
+        </Text>
+        <RadioGroup onChange={(v: Lang) => setLang(v)} value={lang} w="full">
+          <Stack direction="row">
+            {POSSIBLE_LANGS.map(l => (
+              <Radio key={l} value={l}>
+                {l}
+              </Radio>
+            ))}
+          </Stack>
+        </RadioGroup>
+      </Flex>
       <Flex
         w="full"
         justify="space-between"
@@ -57,9 +101,41 @@ export default function SolutionSubmitForm() {
         direction={{ base: "column", md: "row" }}
       >
         <Text w="full" fontSize="2xl">
-          아래에 정답을 입력해주세요
+          아래에 코드를 입력후 제출해주세요
         </Text>
-        <SubmitToolBar />
+        <Flex
+          w="full"
+          gap="20px"
+          align="center"
+          justify={{ base: "start", md: "end" }}
+        >
+          {session?.user ? (
+            <>
+              <Avatar src={session.user.image ?? ""} />
+              <Text fontWeight="bold">{session.user.name}</Text>
+              <Button onClick={handleSignOut}>로그아웃</Button>
+              <Button
+                isDisabled={code === ""}
+                isLoading={createIssueMutation.isLoading}
+                colorScheme="blue"
+                onClick={handelSubmit}
+              >
+                제출
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                onClick={() => {
+                  signIn();
+                }}
+              >
+                GitHub 로그인
+              </Button>
+              <Button isDisabled>로그인 후 제출해주세요</Button>
+            </>
+          )}
+        </Flex>
       </Flex>
 
       <CodeEditor
@@ -127,72 +203,6 @@ function SelectedProb(props: ComponentProps<typeof Flex>) {
         }}
         aria-label="문제 선택 해제"
       />
-    </Flex>
-  );
-}
-
-function SubmitToolBar() {
-  const {
-    result: { selectedProb, code }
-  } = useSearch();
-  const { createIssueMutation } = useIssue();
-  const { data: session } = useSession();
-  const router = useRouter();
-
-  const handelSubmit = () => {
-    if (session?.user?.name === undefined) return;
-
-    createIssueMutation.mutate(
-      {
-        title: `${selectedProb?.title} 정답 | | ${session.user?.name}`,
-        code,
-        assignees: [session.user?.name ?? "", "codeisneverodd"]
-      },
-      {
-        onSuccess: data => {
-          router.push(`/solution-pass/new/submitted/${data.number}`);
-        }
-      }
-    );
-  };
-
-  const handleSignOut = () => {
-    signOut();
-  };
-
-  return (
-    <Flex
-      w="full"
-      gap="20px"
-      align="center"
-      justify={{ base: "start", md: "end" }}
-    >
-      {session?.user ? (
-        <>
-          <Avatar src={session.user.image ?? ""} />
-          <Text fontWeight="bold">{session.user.name}</Text>
-          <Button onClick={handleSignOut}>로그아웃</Button>
-          <Button
-            isDisabled={code === ""}
-            isLoading={createIssueMutation.isLoading}
-            colorScheme="blue"
-            onClick={handelSubmit}
-          >
-            제출
-          </Button>
-        </>
-      ) : (
-        <>
-          <Button
-            onClick={() => {
-              signIn();
-            }}
-          >
-            GitHub 로그인
-          </Button>
-          <Button isDisabled>로그인 후 제출해주세요</Button>
-        </>
-      )}
     </Flex>
   );
 }

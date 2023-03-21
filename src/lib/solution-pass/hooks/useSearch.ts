@@ -10,6 +10,7 @@ const searchAtom = atom<{
   probs: Prob[];
   selectedProb: Prob | null;
   code: string;
+  selectedLangs: Lang[];
 }>({
   key: "solution-pass-searchAtom",
   default: {
@@ -17,7 +18,8 @@ const searchAtom = atom<{
     keyword: "",
     probs: [],
     selectedProb: null,
-    code: ""
+    code: "",
+    selectedLangs: ["JavaScript", "Python"]
   },
   effects: [localStorageEffect("solution-pass-searchAtom")]
 });
@@ -25,15 +27,15 @@ const searchAtom = atom<{
 export default function useSearch() {
   const [result, setResult] = useRecoilState(searchAtom);
   const reset = useResetRecoilState(searchAtom);
-  const { repoQuery } = useRepo();
+  const { probsQuery } = useRepo();
 
   const search = (keyword: string) => {
-    if (repoQuery.data) {
+    if (probsQuery.data) {
       setResult(prev => ({
         ...prev,
-        status: repoQuery.status,
+        status: probsQuery.status,
         keyword,
-        probs: repoQuery.data.probs.filter(
+        probs: probsQuery.data.filter(
           p =>
             chosungIncludes(p.title, keyword) ||
             hangulIncludes(p.title, keyword)
@@ -42,18 +44,57 @@ export default function useSearch() {
     } else {
       setResult(prev => ({
         ...prev,
-        status: repoQuery.status,
+        status: probsQuery.status,
         keyword,
         probs: []
       }));
     }
   };
 
-  const select = (probId: string) => {
+  const selectProb = (probId: string) => {
     setResult(prev => ({
       ...prev,
-      selectedProb: repoQuery.data?.probs.find(p => p.id === probId) ?? null
+      selectedProb: probsQuery.data?.find(p => p.id === probId) ?? null
     }));
+  };
+
+  const addLang = (lang: Lang) => {
+    setResult(prev => ({
+      ...prev,
+      selectedLangs: [...(prev.selectedLangs ?? []), lang]
+    }));
+  };
+  const removeLang = (lang: Lang) => {
+    setResult(prev => ({
+      ...prev,
+      selectedLangs: prev.selectedLangs.filter(l => l !== lang)
+    }));
+  };
+  const toggleLang = (lang: Lang) => {
+    if (result.selectedLangs?.includes(lang)) {
+      removeLang(lang);
+    } else {
+      addLang(lang);
+    }
+  };
+  const addAllLang = () => {
+    setResult(prev => ({
+      ...prev,
+      selectedLangs: [...POSSIBLE_LANGS]
+    }));
+  };
+  const removeAllLang = () => {
+    setResult(prev => ({
+      ...prev,
+      selectedLangs: []
+    }));
+  };
+  const toggleAllLang = () => {
+    if (result.selectedLangs?.length === POSSIBLE_LANGS.length) {
+      removeAllLang();
+    } else {
+      addAllLang();
+    }
   };
 
   const setCode = (code: string) => {
@@ -63,5 +104,20 @@ export default function useSearch() {
     }));
   };
 
-  return { result, search, select, reset, setCode };
+  return {
+    result,
+    search,
+    selectProb,
+    addLang,
+    removeLang,
+    toggleLang,
+    addAllLang,
+    removeAllLang,
+    toggleAllLang,
+    reset,
+    setCode
+  };
 }
+
+export const POSSIBLE_LANGS = ["JavaScript", "Python"] as const;
+export type Lang = "JavaScript" | "Python";
