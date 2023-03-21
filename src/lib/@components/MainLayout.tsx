@@ -88,14 +88,18 @@ function Menu() {
   ]);
 
   return (
-    <Flex flex="1" justify="end">
+    <Flex flex="1" justify="end" gap="12px">
       {menuItems.current.map(({ icon, title, href }) => (
         <Button
           key={title}
           leftIcon={<Icon as={FontAwesomeIcon} icon={icon} />}
           px="12px"
           py="8px"
-          variant="ghost"
+          variant={
+            router.pathname.split("/")[1] === href.replace("/", "")
+              ? "solid"
+              : "ghost"
+          }
           onClick={() => {
             router.push(href);
           }}
