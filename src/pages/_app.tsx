@@ -10,6 +10,7 @@ import type { AppProps } from "next/app";
 import { useState } from "react";
 import { RecoilRoot } from "recoil";
 import { SessionProvider } from "next-auth/react";
+import { Analytics } from "@vercel/analytics/react";
 
 export default function App({
   Component,
@@ -24,6 +25,7 @@ export default function App({
           <ChakraProvider>
             <RecoilRoot>
               <Component {...pageProps} />
+              <Analytics />
             </RecoilRoot>
           </ChakraProvider>
         </Hydrate>
