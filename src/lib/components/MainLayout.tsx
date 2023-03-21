@@ -84,8 +84,7 @@ function Menu() {
     { icon: typeof faClock; title: string; href: string }[]
   >([
     { icon: faHome, title: "Home", href: "/" },
-    { icon: faCode, title: "Solution Pass", href: "/solution-pass" },
-    { icon: faClock, title: "Timer", href: "/timer" }
+    { icon: faCode, title: "Solution Pass", href: "/solution-pass" }
   ]);
 
   return (

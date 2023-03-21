@@ -1,6 +1,12 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-}
 
-module.exports = nextConfig
+const removeImports = require("next-remove-imports")();
+
+const nextConfig = {
+  reactStrictMode: true
+};
+
+module.exports = removeImports({
+  experimental: { esmExternals: true },
+  ...nextConfig
+});

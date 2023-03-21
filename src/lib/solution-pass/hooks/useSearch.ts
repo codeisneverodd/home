@@ -1,3 +1,4 @@
+import { localStorageEffect } from "@/lib/utils/storageEffect";
 import { QueryStatus } from "@tanstack/react-query";
 import { chosungIncludes, hangulIncludes } from "@toss/hangul";
 import { atom, useRecoilState, useResetRecoilState } from "recoil";
@@ -7,13 +8,18 @@ const searchAtom = atom<{
   status: QueryStatus;
   keyword: string;
   probs: Prob[];
+  selectedProb: Prob | null;
+  code: string;
 }>({
   key: "solution-pass-searchAtom",
   default: {
     status: "loading",
     keyword: "",
-    probs: []
-  }
+    probs: [],
+    selectedProb: null,
+    code: ""
+  },
+  effects: [localStorageEffect("solution-pass-searchAtom")]
 });
 
 export default function useSearch() {
@@ -43,5 +49,19 @@ export default function useSearch() {
     }
   };
 
-  return { result, search, reset };
+  const select = (probId: string) => {
+    setResult(prev => ({
+      ...prev,
+      selectedProb: repoQuery.data?.probs.find(p => p.id === probId) ?? null
+    }));
+  };
+
+  const setCode = (code: string) => {
+    setResult(prev => ({
+      ...prev,
+      code
+    }));
+  };
+
+  return { result, search, select, reset, setCode };
 }

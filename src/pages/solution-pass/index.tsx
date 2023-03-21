@@ -12,7 +12,7 @@ export default function SolutionPass() {
         <SearhBar />
         <ResultSection />
         <Link href="/solution-pass/new">
-          <ModeToggleBtn mode="search" aria-label="풀이 추가하기" />
+          <ModeToggleBtn mode="write" aria-label="정답 추가하기" />
         </Link>
       </SolutionPassLayout>
     </MainLayout>

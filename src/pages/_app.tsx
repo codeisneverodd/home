@@ -9,26 +9,32 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import type { AppProps } from "next/app";
 import { useState } from "react";
 import { RecoilRoot } from "recoil";
+import { SessionProvider } from "next-auth/react";
 
-export default function App({ Component, pageProps }: CustomAppProps) {
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps }
+}: CustomAppProps) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Hydrate state={pageProps.dehydratedState}>
-        <ChakraProvider>
-          <RecoilRoot>
-            <Component {...pageProps} />
-          </RecoilRoot>
-        </ChakraProvider>
-      </Hydrate>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <SessionProvider session={session}>
+      <QueryClientProvider client={queryClient}>
+        <Hydrate state={pageProps.dehydratedState}>
+          <ChakraProvider>
+            <RecoilRoot>
+              <Component {...pageProps} />
+            </RecoilRoot>
+          </ChakraProvider>
+        </Hydrate>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </SessionProvider>
   );
 }
 
 export interface CustomAppProps extends AppProps {
   pageProps: {
     dehydratedState?: ReturnType<typeof dehydrate>;
-  };
+  } & AppProps["pageProps"];
 }
