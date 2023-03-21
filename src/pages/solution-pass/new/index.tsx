@@ -1,5 +1,5 @@
-import MainLayout from "@/lib/components/MainLayout";
-import useClient from "@/lib/hooks/useClient";
+import MainLayout from "@/lib/@components/MainLayout";
+import useClient from "@/lib/@hooks/useClient";
 import DropdownSearhBar from "@/lib/solution-pass/components/DropdownSearchBar";
 import ModeToggleBtn from "@/lib/solution-pass/components/ModeToggleBtn";
 import SolutionPassLayout from "@/lib/solution-pass/components/SolutionPassLayout";
@@ -12,12 +12,12 @@ export default function NewSolution() {
   if (!isClient) return null;
 
   return (
-    <MainLayout title="Solution Pass">
+    <MainLayout title="새로운 정답">
       <SolutionPassLayout>
         <DropdownSearhBar />
         <SolutionSubmitForm />
         <Link href="/solution-pass">
-          <ModeToggleBtn mode="search" aria-label="풀이 검색하기" />
+          <ModeToggleBtn mode="search" aria-label="정답 검색하기" />
         </Link>
       </SolutionPassLayout>
     </MainLayout>

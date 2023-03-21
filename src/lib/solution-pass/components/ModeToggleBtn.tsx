@@ -1,3 +1,4 @@
+import useColor from "@/lib/@hooks/useColor";
 import { Button, Icon, IconButton } from "@chakra-ui/react";
 import { faPencil, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -20,6 +21,7 @@ const modeIcon: {
 };
 
 export default function ModeToggleBtn({ mode, ...props }: ModeToggleBtnProps) {
+  const { accentBg, subtleBg } = useColor();
   return (
     <Button
       rounded="full"
@@ -28,8 +30,14 @@ export default function ModeToggleBtn({ mode, ...props }: ModeToggleBtnProps) {
       right="40px"
       size="lg"
       variant="solid"
-      backdropFilter="auto"
-      backdropBlur="3xl"
+      shadow="lg"
+      _dark={{
+        bg: accentBg,
+        _hover: {
+          bg: subtleBg
+        }
+      }}
+      _
       leftIcon={<Icon as={FontAwesomeIcon} icon={modeIcon[mode].icon} />}
       {...props}
     >

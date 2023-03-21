@@ -1,4 +1,4 @@
-import MainLayout from "@/lib/components/MainLayout";
+import MainLayout from "@/lib/@components/MainLayout";
 import ModeToggleBtn from "@/lib/solution-pass/components/ModeToggleBtn";
 import ResultSection from "@/lib/solution-pass/components/ResultSection";
 import SearhBar from "@/lib/solution-pass/components/SearchBar";
@@ -7,7 +7,7 @@ import { Link } from "@chakra-ui/react";
 
 export default function SolutionPass() {
   return (
-    <MainLayout title="새로운 풀이">
+    <MainLayout title="Solution Pass">
       <SolutionPassLayout>
         <SearhBar />
         <ResultSection />

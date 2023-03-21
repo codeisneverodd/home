@@ -1,4 +1,4 @@
-import useColor from "@/lib/hooks/useColor";
+import useColor from "@/lib/@hooks/useColor";
 import {
   Avatar,
   Button,
@@ -152,7 +152,7 @@ function SubmitToolBar() {
 
     createIssueMutation.mutate(
       {
-        title: `Level ${selectedProb?.level} | ${selectedProb?.title} 풀이 | | ${session.user?.name}`,
+        title: `Level ${selectedProb?.level} | ${selectedProb?.title} 정답 | | ${session.user?.name}`,
         code,
         assignees: [session.user?.name ?? "", "codeisneverodd"]
       },

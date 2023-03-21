@@ -1,4 +1,4 @@
-import useColor from "@/lib/hooks/useColor";
+import useColor from "@/lib/@hooks/useColor";
 import {
   Box,
   Button,

@@ -1,4 +1,4 @@
-import useColor from "@/lib/hooks/useColor";
+import useColor from "@/lib/@hooks/useColor";
 import { Box, Center, Flex, Text, useOutsideClick } from "@chakra-ui/react";
 import { ComponentProps, useRef, useState } from "react";
 import AutoSizer from "react-virtualized-auto-sizer";

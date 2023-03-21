@@ -1,4 +1,4 @@
-import { localStorageEffect } from "@/lib/utils/storageEffect";
+import { localStorageEffect } from "@/lib/@utils/storageEffect";
 import { QueryStatus } from "@tanstack/react-query";
 import { chosungIncludes, hangulIncludes } from "@toss/hangul";
 import { atom, useRecoilState, useResetRecoilState } from "recoil";

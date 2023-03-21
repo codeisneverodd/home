@@ -1,4 +1,4 @@
-import useColor from "@/lib/hooks/useColor";
+import useColor from "@/lib/@hooks/useColor";
 import { CustomAppProps } from "@/pages/_app";
 import {
   Accordion,
@@ -59,7 +59,7 @@ function TableHeader() {
     >
       <Text w="60px">난이도</Text>
       <Text flex="1">제목</Text>
-      <Text w="60px">풀이 수</Text>
+      <Text w="60px">정답 수</Text>
       <Text w="40px">정답</Text>
     </Flex>
   );
