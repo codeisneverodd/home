@@ -5,6 +5,7 @@ namespace NodeJS {
     GITHUB_ID: string;
     GITHUB_SECRET: string;
     GITHUB_PAT: string;
-    SECRET: string;
+    NEXTAUTH_URL: string;
+    NEXTAUTH_SECRET: string;
   }
 }
