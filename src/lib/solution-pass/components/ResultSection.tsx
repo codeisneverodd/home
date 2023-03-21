@@ -198,8 +198,7 @@ function Solutions({ solData: { author, code } }: { solData: Sol }) {
             toast({
               title: "코드가 복사되었어요",
               status: "success",
-              duration: 1000,
-              position: "bottom-left"
+              duration: 1000
             });
           }}
           pos="absolute"
