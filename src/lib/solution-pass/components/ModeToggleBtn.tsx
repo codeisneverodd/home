@@ -37,7 +37,6 @@ export default function ModeToggleBtn({ mode, ...props }: ModeToggleBtnProps) {
           bg: subtleBg
         }
       }}
-      _
       leftIcon={<Icon as={FontAwesomeIcon} icon={modeIcon[mode].icon} />}
       {...props}
     >
