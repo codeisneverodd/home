@@ -73,10 +73,15 @@ function codeToMarkdown({
   author: string;
   lang: Lang;
 }) {
+  const langStyle = {
+    JavaScript: "js",
+    Python: "py"
+  };
+
   return `
 @${author} 님의 정답이에요! 👏👏👏
 ## 제출한 정답 
-\`\`\`js
+\`\`\`${langStyle[lang]}
 ${code}
 \`\`\`
 ## 풀이 데이터
