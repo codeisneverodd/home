@@ -1,6 +1,5 @@
 import useColor from "@/lib/@hooks/useColor";
 import {
-  Avatar,
   Button,
   Center,
   Flex,
@@ -19,7 +18,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "@uiw/react-textarea-code-editor/dist.css";
-import { signIn, signOut, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -41,19 +39,18 @@ export default function SolutionSubmitForm() {
     setCode
   } = useSearch();
   const { createIssueMutation } = useIssue();
-  const { data: session } = useSession();
   const router = useRouter();
 
   const handelSubmit = () => {
-    if (session?.user?.name === undefined) return;
+    // if (session?.user?.name === undefined) return;
 
     createIssueMutation.mutate(
       {
-        title: `${selectedProb?.title} 정답 | ${session.user?.name}`,
+        title: `${selectedProb?.title} 정답 `,
         code,
         probId: selectedProb?.id ?? "",
-        author: session.user?.name ?? "",
-        assignees: [session.user?.name ?? "", "codeisneverodd"],
+        author: "codeisneverodd",
+        assignees: ["codeisneverodd"],
         lang
       },
       {
@@ -62,10 +59,6 @@ export default function SolutionSubmitForm() {
         }
       }
     );
-  };
-
-  const handleSignOut = () => {
-    signOut();
   };
 
   if (!selectedProb) {
@@ -110,19 +103,9 @@ export default function SolutionSubmitForm() {
           align="center"
           justify={{ base: "start", md: "end" }}
         >
-          {session?.user ? (
+          {/* {session?.user ? (
             <>
-              <Avatar src={session.user.image ?? ""} />
-              <Text fontWeight="bold">{session.user.name}</Text>
-              <Button onClick={handleSignOut}>로그아웃</Button>
-              <Button
-                isDisabled={code === ""}
-                isLoading={createIssueMutation.isLoading}
-                colorScheme="blue"
-                onClick={handelSubmit}
-              >
-                제출
-              </Button>
+              
             </>
           ) : (
             <>
@@ -135,7 +118,18 @@ export default function SolutionSubmitForm() {
               </Button>
               <Button isDisabled>로그인 후 제출해주세요</Button>
             </>
-          )}
+          )} */}
+          {/* <Avatar src={session.user.image ?? ""} />
+          <Text fontWeight="bold">{session.user.name}</Text>
+          <Button onClick={handleSignOut}>로그아웃</Button> */}
+          <Button
+            isDisabled={code === ""}
+            isLoading={createIssueMutation.isLoading}
+            colorScheme="blue"
+            onClick={handelSubmit}
+          >
+            제출
+          </Button>
         </Flex>
       </Flex>
 
