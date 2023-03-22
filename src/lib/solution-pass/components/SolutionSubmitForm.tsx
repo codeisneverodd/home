@@ -36,6 +36,10 @@ const CodeEditor = dynamic(
 export default function SolutionSubmitForm() {
   const { colorMode } = useColorMode();
   const [lang, setLang] = useState<Lang>("JavaScript");
+  const codeLangStyle = {
+    JavaScript: "js",
+    Python: "py"
+  };
   const {
     result: { selectedProb, code },
     setCode
@@ -53,7 +57,6 @@ export default function SolutionSubmitForm() {
         code,
         probId: selectedProb?.id ?? "",
         author: session.user?.name ?? "",
-        assignees: [session.user?.name ?? "", "codeisneverodd"],
         lang
       },
       {
@@ -126,13 +129,16 @@ export default function SolutionSubmitForm() {
             </>
           ) : (
             <>
-              <Button
-                onClick={() => {
-                  signIn();
-                }}
-              >
-                GitHub 로그인
-              </Button>
+              <Tooltip label="로그인시 요청하는 권한은 GitHub 이슈 등록을 위해 필요한 최소한의 권한이에요! 다른 용도로 사용되지 않으니 걱정 마세요">
+                <Button
+                  onClick={() => {
+                    signIn();
+                  }}
+                >
+                  GitHub 로그인
+                </Button>
+              </Tooltip>
+
               <Button isDisabled>로그인 후 제출해주세요</Button>
             </>
           )}
@@ -141,7 +147,7 @@ export default function SolutionSubmitForm() {
 
       <CodeEditor
         value={code}
-        language="js"
+        language={codeLangStyle[lang]}
         placeholder="코드를 입력해주세요"
         onChange={evn => setCode(evn.target.value)}
         padding={15}

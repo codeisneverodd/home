@@ -1,6 +1,8 @@
 import { GetResponseTypeFromEndpointMethod } from "@octokit/types";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { getServerSession } from "next-auth";
 import { Octokit } from "octokit";
+import { authOptions } from "./auth/[...nextauth]";
 
 const ONWER = "codeisneverodd";
 const REPO = "programmers-coding-test";
@@ -25,14 +27,19 @@ export default async function handler(
 
   if (req.method === "POST") {
     try {
-      const { title, assignees, body } = req.body as CreateRepoIssueReqBody;
+      const session = (await getServerSession(req, res, authOptions)) as {
+        accessToken: string;
+      };
+      const newOctokit = new Octokit({
+        auth: session.accessToken ?? process.env.GITHUB_PAT
+      });
+      const { title, body } = req.body as CreateRepoIssueReqBody;
 
-      const { data } = await octokit.rest.issues.create({
+      const { data } = await newOctokit.rest.issues.create({
         owner: ONWER,
         repo: REPO,
         labels: ["확인중 👀"],
         title,
-        assignees,
         body
       });
 
@@ -53,6 +60,5 @@ export type CreateRepoIssuesResponse = GetResponseTypeFromEndpointMethod<
 
 export type CreateRepoIssueReqBody = {
   title: string;
-  assignees: string[];
   body: string;
 };

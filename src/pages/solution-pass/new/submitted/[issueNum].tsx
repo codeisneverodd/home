@@ -90,6 +90,15 @@ function FAQ({ issueNum }: { issueNum: string }) {
           이용해주세요!
         </Text>
       )
+    },
+    {
+      title: "어떤 언어를 지원하나요?",
+      content: (
+        <Text>
+          지금은 JavaScript 와 Python 만 지원하고 있어요. 추후에 다른 언어도
+          지원할 예정이에요!
+        </Text>
+      )
     }
   ];
 
@@ -100,7 +109,7 @@ function FAQ({ issueNum }: { issueNum: string }) {
       </Text>
       <Accordion w="full" allowMultiple>
         {faqList.map(({ title, content }) => (
-          <AccordionItem>
+          <AccordionItem key={title}>
             <AccordionButton h="60px" fontSize="xl" fontWeight="semibold">
               <Box as="span" flex="1" textAlign="left">
                 {title}

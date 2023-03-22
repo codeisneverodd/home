@@ -2,10 +2,13 @@
 
 namespace NodeJS {
   interface ProcessEnv {
-    GITHUB_ID: string;
-    GITHUB_SECRET: string;
-    GITHUB_PAT: string;
     NEXTAUTH_URL: string;
     NEXTAUTH_SECRET: string;
+
+    GITHUB_CLIENT_ID: string;
+    GITHUB_APP_ID: string;
+    GITHUB_CLIENT_SECRET: string;
+    GITHUB_PAT: string;
+    GITHUB_PRIVATE_KEY: string;
   }
 }

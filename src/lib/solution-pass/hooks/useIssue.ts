@@ -24,19 +24,16 @@ export default function useIssue() {
       title,
       code,
       author,
-      assignees,
       lang
     }: {
       probId: string;
       title: string;
       code: string;
       author: string;
-      assignees: string[];
       lang: Lang;
     }) => {
       const reqBody: CreateRepoIssueReqBody = {
         title,
-        assignees,
         body: codeToMarkdown({ code, probId, author, lang })
       };
       const response = await axios.post<CreateRepoIssuesResponse>(
@@ -77,6 +74,7 @@ function codeToMarkdown({
   lang: Lang;
 }) {
   return `
+@${author} 님의 정답이에요! 👏👏👏
 ## 제출한 정답 
 \`\`\`js
 ${code}
